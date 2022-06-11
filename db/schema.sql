@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS elctrfy_db;
+
+CREATE DATABASE electrfy_db;
