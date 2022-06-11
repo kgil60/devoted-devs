@@ -1,3 +1,4 @@
-const router = require('express').Router();
+const User = require('./User.js');
+const Post = require('./Post.js');
 
-module.exports = router;
+module.exports = { User };
