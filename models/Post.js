@@ -8,7 +8,7 @@ class Post extends Model {
             post_id: body.post_id
         })
         .then(() => {
-            Post.findOne({
+            return Post.findOne({
                 where: {
                     id: body.post_id
                 },

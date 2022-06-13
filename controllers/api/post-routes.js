@@ -5,21 +5,27 @@ const sequelize = require('../../config/connection.js');
 // get all posts
 router.get('/', (req, res) => {
     Post.findAll({
-        attributes: ['id', 'title', 'post_url', 'created_at'],
+        attributes: [
+            'id',
+            'title',
+            'post_url',
+            'created_at',
+            [sequelize.literal('(SELECT COUNT(*) FROM `like` WHERE post.id = `like`.post_id)'), 'like_count']
+        ],
         include: [
-            {
-                model: Comment,
-                attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
-                include: {
-                    model: User,
-                    attributes: ['username']
-                }
-            },
-            {
-                model: User,
-                attributes: ['username']
-            }
-        ]
+                    {
+                        model: Comment,
+                        attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                        include: {
+                            model: User,
+                            attributes: ['username']
+                        }
+                    },
+                    {
+                        model: User,
+                        attributes: ['username']
+                    }
+                ]
     })
     .then(dbPostData => res.json(dbPostData))
     .catch(err => {
@@ -34,7 +40,7 @@ router.get('/:id', (req, res) => {
         where: {
             id: req.params.id
         },
-        attributes: ['id', 'title', 'post_url', 'created_at'],
+        attributes: ['id', 'title', 'post_url', 'created_at', [sequelize.literal('(SELECT COUNT(*) FROM `like` WHERE post.id = `like`.post_id)'), 'like_count']],
         include: [
             {
                 model: Comment,
@@ -133,5 +139,3 @@ router.delete('/:id', (req, res) => {
 });
 
 module.exports = router;
-
-// [sequelize.literal('(SELECT COUNT(*) FROM like WHERE post.id = like.post_id)'), 'like_count']
